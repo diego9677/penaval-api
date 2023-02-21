@@ -10,7 +10,6 @@ const createSchema = z.object({
     code: z.string(),
     measures: z.string(),
     price: z.number(),
-    stock: z.number().int(),
     placeId: z.number().int(),
     brandId: z.number().int(),
   }).required()
@@ -21,7 +20,6 @@ const updateSchema = z.object({
     code: z.string().optional(),
     measures: z.string().optional(),
     price: z.number().optional(),
-    stock: z.number().int().optional(),
     placeId: z.number().int().optional(),
     brandId: z.number().int().optional(),
   }).required()

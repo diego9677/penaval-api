@@ -67,7 +67,7 @@ model Product {
   id             Int              @id @default(autoincrement())
   code           String           @unique
   price          Decimal          @db.Decimal(18, 2)
-  stock          Int
+  stock          Int              @default(0)
   measures       String           @db.VarChar(200)
   placeId        Int
   brandId        Int

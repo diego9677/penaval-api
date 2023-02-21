@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 
@@ -27,7 +26,9 @@ const selectProduct = {
 class ProductController {
   async getAll(req: Request, res: Response) {
     try {
+      const search = req.query.search as string;
       const productsDb = await prisma.product.findMany({
+        where: { code: { contains: search, mode: 'insensitive' }, measures: { contains: search, mode: 'insensitive' }, brand: { name: { contains: search, mode: 'insensitive' } } },
         select: selectProduct,
         orderBy: {
           id: 'asc'
@@ -42,7 +43,7 @@ class ProductController {
   async getOne(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
-      const productDb = await prisma.product.findFirst({ where: { id } });
+      const productDb = await prisma.product.findFirst({ select: selectProduct, where: { id } });
       if (!productDb) return res.status(404).json({ error: 'Product not found' });
       return res.status(200).json(productDb);
     } catch (error) {
