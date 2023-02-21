@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Brand {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(200)
+  description String    @db.Text
+  createdAt   DateTime  @default(now()) @db.Timestamptz()
+  updatedAt   DateTime  @updatedAt @db.Timestamptz()
+  products    Product[]
+}
+
+model Person {
+  id        Int      @id @default(autoincrement())
+  firstName String   @db.VarChar(200)
+  lastName  String   @db.VarChar(200)
+  phone     String   @db.VarChar(50)
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+  client    Client?
+  user      User?
+}
+
+model Client {
+  id        Int        @id @default(autoincrement())
+  personId  Int        @unique
+  nit       String     @db.VarChar(50)
+  createdAt DateTime   @default(now()) @db.Timestamptz()
+  updatedAt DateTime   @updatedAt @db.Timestamptz()
+  person    Person     @relation(fields: [personId], references: [id], onDelete: Cascade)
+  sales     Sale[]
+  Proforma  Proforma[]
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  personId  Int        @unique
+  username  String     @unique @db.VarChar(100)
+  password  String     @db.VarChar(200)
+  createdAt DateTime   @default(now()) @db.Timestamptz()
+  updatedAt DateTime   @updatedAt @db.Timestamptz()
+  person    Person     @relation(fields: [personId], references: [id], onDelete: Cascade)
+  sales     Sale[]
+  shopping  Shopping[]
+  Proforma  Proforma[]
+}
+
+model Place {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(200)
+  description String    @db.Text
+  createdAt   DateTime  @default(now()) @db.Timestamptz()
+  updatedAt   DateTime  @updatedAt @db.Timestamptz()
+  products    Product[]
+}
+
+model Product {
+  id             Int              @id @default(autoincrement())
+  code           String           @unique
+  price          Decimal          @db.Decimal(18, 2)
+  stock          Int
+  measures       String           @db.VarChar(200)
+  placeId        Int
+  brandId        Int
+  createdAt      DateTime         @default(now()) @db.Timestamptz()
+  updatedAt      DateTime         @updatedAt @db.Timestamptz()
+  place          Place            @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  brand          Brand            @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  saleDetail     SaleDetail[]
+  shoppingDetail ShoppingDetail[]
+  proformaDetail ProformaDetail[]
+}
+
+model Provider {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(200)
+  address   String     @db.Text
+  createdAt DateTime   @default(now()) @db.Timestamptz()
+  updatedAt DateTime   @updatedAt @db.Timestamptz()
+  shopping  Shopping[]
+}
+
+model Sale {
+  id         Int          @id @default(autoincrement())
+  userId     Int
+  clientId   Int
+  createdAt  DateTime     @default(now()) @db.Timestamptz()
+  updatedAt  DateTime     @updatedAt @db.Timestamptz()
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client     Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  saleDetail SaleDetail[]
+}
+
+model SaleDetail {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  saleId    Int
+  quantity  Int
+  salePrice Decimal  @db.Decimal(18, 2)
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sale      Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+}
+
+model Shopping {
+  id             Int              @id @default(autoincrement())
+  userId         Int
+  providerId     Int
+  createdAt      DateTime         @default(now()) @db.Timestamptz()
+  updatedAt      DateTime         @updatedAt @db.Timestamptz()
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider       Provider         @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  shoppingDetail ShoppingDetail[]
+}
+
+model ShoppingDetail {
+  id            Int      @id @default(autoincrement())
+  productId     Int
+  shoppingId    Int
+  quantity      Int
+  salePrice     Decimal  @db.Decimal(18, 2)
+  pucharsePrice Decimal  @db.Decimal(18, 2)
+  createdAt     DateTime @default(now()) @db.Timestamptz()
+  updatedAt     DateTime @updatedAt @db.Timestamptz()
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  shopping      Shopping @relation(fields: [shoppingId], references: [id], onDelete: Cascade)
+}
+
+model Proforma {
+  id             Int              @id @default(autoincrement())
+  userId         Int
+  clientId       Int
+  createdAt      DateTime         @default(now()) @db.Timestamptz()
+  updatedAt      DateTime         @updatedAt @db.Timestamptz()
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client         Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  proformaDetail ProformaDetail[]
+}
+
+model ProformaDetail {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  proformaId Int
+  quantity   Int
+  unitPrice  Decimal  @db.Decimal(18, 2)
+  createdAt  DateTime @default(now()) @db.Timestamptz()
+  updatedAt  DateTime @updatedAt @db.Timestamptz()
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  proforma   Proforma @relation(fields: [proformaId], references: [id], onDelete: Cascade)
+}
