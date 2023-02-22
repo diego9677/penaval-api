@@ -27,8 +27,15 @@ class ProductController {
   async getAll(req: Request, res: Response) {
     try {
       const search = req.query.search as string;
+      console.log(search);
       const productsDb = await prisma.product.findMany({
-        where: { code: { contains: search, mode: 'insensitive' }, measures: { contains: search, mode: 'insensitive' }, brand: { name: { contains: search, mode: 'insensitive' } } },
+        where: {
+          OR: [
+            { code: { contains: search, mode: 'insensitive' } },
+            { measures: { contains: search, mode: 'insensitive' } },
+            { brand: { name: { contains: search, mode: 'insensitive' } } }
+          ]
+        },
         select: selectProduct,
         orderBy: {
           id: 'asc'
