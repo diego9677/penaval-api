@@ -104,6 +104,17 @@ class ClientController {
       return res.status(500).json({ error });
     }
   }
+
+  async getByNit(req: Request, res: Response) {
+    try {
+      const nit = req.params.nit as string;
+      const clientDb = await prisma.client.findUnique({ select: selectClient, where: { nit } });
+      if (!clientDb) return res.status(404).json({ error: 'Client not found' });
+      return res.status(200).json(clientDb);
+    } catch (error) {
+      return res.status(500).json({ error });
+    }
+  }
 }
 
 export const clientController = new ClientController();

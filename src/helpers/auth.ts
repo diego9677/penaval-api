@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { UserLogged } from '../index';
+import { UserLogged } from "../interfaces";
 
 const secretKey = process.env.SECRET_KEY ?? 'super_secret_key';
 

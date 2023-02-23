@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { UserLogged } from "../interfaces";
 import prisma from "../lib/prisma";
 
 const selectProforma = {

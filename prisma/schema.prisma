@@ -33,7 +33,7 @@ model Person {
 model Client {
   id        Int        @id @default(autoincrement())
   personId  Int        @unique
-  nit       String     @db.VarChar(50)
+  nit       String     @unique @db.VarChar(50)
   createdAt DateTime   @default(now()) @db.Timestamptz()
   updatedAt DateTime   @updatedAt @db.Timestamptz()
   person    Person     @relation(fields: [personId], references: [id], onDelete: Cascade)
