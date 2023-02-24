@@ -92,7 +92,7 @@ class SaleController {
         data: { nit, person: { update: { firstName, lastName, phone } } }
       });
 
-      const craetedShoppingDb = await prisma.sale.create({
+      const craetedSaleDb = await prisma.sale.create({
         select: selectSale,
         data: {
           client: { connect: { id: clientDb.id } },
@@ -114,8 +114,9 @@ class SaleController {
         });
       }
 
-      return res.status(200).json(craetedShoppingDb);
+      return res.status(200).json(craetedSaleDb);
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ error });
     }
   }

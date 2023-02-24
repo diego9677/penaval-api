@@ -1,0 +1,3 @@
+psql -Atq -h localhost -U postgres -d penaval-api -f fix_sequences.sql -o tmp
+psql -h localhost -U postgres -d penaval-api -f .\tmp
+rm tmp

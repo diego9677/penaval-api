@@ -27,7 +27,6 @@ class ProductController {
   async getAll(req: Request, res: Response) {
     try {
       const search = req.query.search as string;
-      console.log(search);
       const productsDb = await prisma.product.findMany({
         where: {
           OR: [
@@ -37,6 +36,7 @@ class ProductController {
           ]
         },
         select: selectProduct,
+        take: 100,
         orderBy: {
           id: 'asc'
         }

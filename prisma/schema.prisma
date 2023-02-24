@@ -101,15 +101,13 @@ model Sale {
 }
 
 model SaleDetail {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   productId Int
   saleId    Int
   quantity  Int
-  salePrice Decimal  @db.Decimal(18, 2)
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  sale      Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  salePrice Decimal @db.Decimal(18, 2)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
 }
 
 model Shopping {
@@ -130,8 +128,6 @@ model ShoppingDetail {
   quantity      Int
   salePrice     Decimal  @db.Decimal(18, 2)
   pucharsePrice Decimal  @db.Decimal(18, 2)
-  createdAt     DateTime @default(now()) @db.Timestamptz()
-  updatedAt     DateTime @updatedAt @db.Timestamptz()
   product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   shopping      Shopping @relation(fields: [shoppingId], references: [id], onDelete: Cascade)
 }
@@ -153,8 +149,6 @@ model ProformaDetail {
   proformaId Int
   quantity   Int
   unitPrice  Decimal  @db.Decimal(18, 2)
-  createdAt  DateTime @default(now()) @db.Timestamptz()
-  updatedAt  DateTime @updatedAt @db.Timestamptz()
   product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   proforma   Proforma @relation(fields: [proformaId], references: [id], onDelete: Cascade)
 }
