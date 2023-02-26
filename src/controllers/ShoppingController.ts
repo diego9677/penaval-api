@@ -78,7 +78,8 @@ class ShoppingController {
         await prisma.product.update({
           where: { id: product.productId },
           data: {
-            stock: { increment: product.quantity }
+            stock: { increment: product.quantity },
+            price: product.salePrice
           }
         });
       }
